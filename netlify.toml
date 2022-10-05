@@ -1,0 +1,5 @@
+[functions."test-function"]
+schedule = "@hourly"
+
+[dev]
+  targetPort = 5173

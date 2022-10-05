@@ -1,0 +1,20 @@
+{
+  "name": "kickbase-autodecline",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.4",
+    "vite": "^3.1.0"
+  },
+  "dependencies": {
+    "@netlify/functions": "^1.2.0",
+    "axios": "^1.0.0",
+    "netlify-cli": "^12.0.5"
+  }
+}
