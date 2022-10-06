@@ -1,45 +1,36 @@
 import { Handler } from "@netlify/functions";
-import axios from 'axios';
+import axios, { AxiosPromise } from "axios";
 
 // Login to Kickbase => Token
-function  login(): String {
-        axios({
-            'url': 'https://api.kickbase.com/user/login',
-            "method": 'POST',
-            'data': {
-                'email': 'pro',
-                'password': localStorage.getItem('password'),
-                'ext': true,
-            }
-              })
-            .then((response) => {
-                if (response.status === 200) {
+const login = async (): AxiosPromise => {
+  return await axios({
+    url: "https://api.kickbase.com/user/login",
+    method: "POST",
+    data: {
+      email: process.env.USER,
+      password: process.env.PASSWORD,
+      ext: true,
+    },
+  });
+};
 
-                    if (response.data.token && response.data.tokenExp) {
-                        localStorage.setItem('token', response.data.token)
-                        localStorage.setItem('tokenExp', response.data.tokenExp)
-                    } else {
-                    }
-                }
-            })
-            .catch(function () {
-            })
-    }
-
-function getToken():  String {
-    return 'Bearer ' + localStorage.getItem('token');
-} 
-    
-function checkForCredentials(): Boolean {
-        if (localStorage.getItem('user') &&
-            localStorage.getItem('password') &&
-            localStorage.getItem('user') !== "" &&
-            localStorage.getItem('password') !== ""
-        ) {
-            return true;
+const getToken = async (): Promise<string> => {
+  return login().then(
+    (response: any) => {
+      if (response.status === 200) {
+        if (response.data.token && response.data.tokenExp) {
+          return "Bearer " + response.data.token;
+          // localStorage.setItem('tokenExp', response.data.tokenExp)
+        } else {
+          return "Error: No token.";
         }
-        return false;
-    }
+      } else {
+        return "Error. Response status: " + response.status;
+      }
+    },
+    (error) => "Error: " + error
+  );
+};
 
 // Get all players with market values and offers
 
@@ -51,15 +42,13 @@ function checkForCredentials(): Boolean {
 
 //axios.defaults.headers.common['Authorization'] = api.getToken();
 
+const handler: Handler = async () => {
+  console.log(process.env.USER)
+  console.log(await getToken());
 
-
-const handler: Handler = async (event, context) => {
-    console.log("Received event:", event)
-
-    return {
-        statusCode: 200,
-    };
+  return {
+    statusCode: 300,
+  };
 };
 
 export { handler };
-

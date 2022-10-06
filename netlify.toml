@@ -1,5 +1,5 @@
-[functions."test-function"]
-schedule = "@hourly"
+[functions."kickbase-autodecline"]
+schedule = "0-59 * * * *"
 
 [dev]
   targetPort = 5173
