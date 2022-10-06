@@ -43,7 +43,6 @@ const getToken = async (): Promise<string> => {
 //axios.defaults.headers.common['Authorization'] = api.getToken();
 
 const handler: Handler = async () => {
-  console.log(process.env.USER)
   console.log(await getToken());
 
   return {
