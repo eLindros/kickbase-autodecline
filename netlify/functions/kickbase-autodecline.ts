@@ -1,28 +1,23 @@
 import { Handler } from "@netlify/functions";
-import axios, { AxiosPromise } from "axios";
+import axios from "axios";
+import { KickbaseLogin } from "../classes/Login";
 
 // Login to Kickbase => Token
-const login = async (): AxiosPromise => {
-  return await axios({
-    url: "https://api.kickbase.com/user/login",
-    method: "POST",
-    data: {
-      email: process.env.USER,
-      password: process.env.PASSWORD,
-      ext: true,
-    },
-  });
-};
-
-const getToken = async (): Promise<string> => {
-  return login().then(
-    (response: any) => {
+const getFirstLeagueId = async (): Promise<string> => {
+  return axios({
+    url: "https://api.kickbase.com/leagues",
+    method: "GET",
+  }).then(
+    (response) => {
       if (response.status === 200) {
-        if (response.data.token && response.data.tokenExp) {
-          return "Bearer " + response.data.token;
-          // localStorage.setItem('tokenExp', response.data.tokenExp)
+        if (
+          response.data &&
+          response.data.leagues &&
+          response.data.leagues.length
+        ) {
+          return response.data.leagues[0].id || "no league id";
         } else {
-          return "Error: No token.";
+          return "no league";
         }
       } else {
         return "Error. Response status: " + response.status;
@@ -40,10 +35,20 @@ const getToken = async (): Promise<string> => {
 
 // every hour: remove player with too low offer from market
 
-//axios.defaults.headers.common['Authorization'] = api.getToken();
-
 const handler: Handler = async () => {
-  console.log(await getToken());
+
+const user: string = process.env.KICKBASE_USER || 'none';
+const password: string = process.env.KICKBASE_PASSWORD || 'none';
+
+  const login = new KickbaseLogin(
+    "https://api.kickbase.com/user/login",
+    user,
+    password,
+  );
+  await login.login();
+  const Token = login.token;
+  axios.defaults.headers.common["Authorization"] = Token;
+  console.log(await getFirstLeagueId());
 
   return {
     statusCode: 300,
