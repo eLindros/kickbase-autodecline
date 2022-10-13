@@ -16,8 +16,8 @@ const handler: Handler = async () => {
   const password: string = process.env.KICKBASE_PASSWORD || 'none';
 
   const kickbase = new KickbaseApi(user, password);
-  await kickbase.getLeagues();
-  if (kickbase.data.leagues) console.log(kickbase.data.leagues);
+  await kickbase.getMarket();
+  if (kickbase.data.market) console.log(kickbase.data.market);
 
   return {
     statusCode: 200,

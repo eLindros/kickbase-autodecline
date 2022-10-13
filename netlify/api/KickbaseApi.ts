@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { Login, Leagues, Market } from './interfaces';
+import { Login, League, Leagues, Market, Players } from './interfaces';
 
 enum kickbaseApiUrls {
   base = 'https://api.kickbase.com',
@@ -10,9 +10,14 @@ enum kickbaseApiUrls {
 
 type AxiosCallResponse<T> = [unknown | null, T | null];
 
-interface KickbaseData {
+interface KickbaseApiResponses {
   leagues?: Leagues;
   market?: Market;
+}
+
+interface KickbaseData {
+  leagues?: League[];
+  market?: Players[];
 }
 
 export class KickbaseApi {
@@ -30,7 +35,7 @@ export class KickbaseApi {
     });
   }
 
-  private async axiosCallPlain<T>(
+  private async axiosCall<T>(
     config: AxiosRequestConfig
   ): Promise<AxiosCallResponse<T>> {
     try {
@@ -41,23 +46,15 @@ export class KickbaseApi {
     }
   }
 
-  private async axiosCall<T extends KickbaseData[keyof KickbaseData]>(
-    config: AxiosRequestConfig,
-    parameter: keyof KickbaseData
-  ): Promise<AxiosCallResponse<T>> {
+  private async axiosCallAuth<
+    T extends KickbaseApiResponses[keyof KickbaseApiResponses]
+  >(config: AxiosRequestConfig): Promise<AxiosCallResponse<T>> {
     await this.authorize();
-    return this.axiosCallPlain<T>(config).then(
-      (response: AxiosCallResponse<T>) => {
-        const [error, data] = response;
-        if (error) console.log(error);
-        if (data) this.data[parameter] = data;
-        return response;
-      }
-    );
+    return this.axiosCallAuth<T>(config);
   }
 
   private async login(): Promise<void> {
-    return this.axiosCallPlain<Login>({
+    return this.axiosCall<Login>({
       url: kickbaseApiUrls.login,
       method: 'POST',
       data: {
@@ -82,24 +79,38 @@ export class KickbaseApi {
   }
 
   async getLeagues(): Promise<AxiosCallResponse<Leagues>> {
-    await this.authorize();
-    return this.axiosCall<Leagues>(
-      {
-        url: kickbaseApiUrls.league,
-        method: 'GET',
-      },
-      'leagues'
-    );
+    return this.axiosCallAuth<Leagues>({
+      url: kickbaseApiUrls.league,
+      method: 'GET',
+    }).then((response: AxiosCallResponse<Leagues>) => {
+      const [error, data] = response;
+      if (error) console.log(error);
+      if (data && data.leagues) this.data.leagues = data.leagues;
+      return response;
+    });
+  }
+
+  async getLeagueId(leagueIndex: number): Promise<AxiosCallResponse<string>> {
+    if (!this.data.leagues) await this.getLeagues();
+    const leagues: League[] | undefined = this.data.leagues;
+    if (leagues && leagues.length >= leagueIndex) {
+      return [null, leagues[leagueIndex].id];
+    }
+    return ['Error: Keine LeagueID gefunden.', null];
   }
 
   async getMarket(): Promise<AxiosCallResponse<Market>> {
-    await this.authorize();
-    return this.axiosCall<Market>(
-      {
-        url: kickbaseApiUrls.market,
-        method: 'GET',
-      },
-      'market'
-    );
+    const marketUrl: string = await `${this.getLeagueId(0)}${
+      kickbaseApiUrls.market
+    }`;
+    return this.axiosCallAuth<Market>({
+      url: marketUrl,
+      method: 'GET',
+    }).then((response: AxiosCallResponse<Market>) => {
+      const [error, data] = response;
+      if (error) console.log(error);
+      if (data && data.players) this.data.market = data.players;
+      return response;
+    });
   }
 }
