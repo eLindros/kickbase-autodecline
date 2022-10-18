@@ -1,5 +1,0 @@
-[functions."kickbase-autodecline"]
-schedule ="@daily"
-
-[dev]
-  targetPort = 5173

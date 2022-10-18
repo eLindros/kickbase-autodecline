@@ -3,7 +3,7 @@ export interface Market {
   players: Players[];
 }
 
-interface Players {
+export interface Players {
   id: string; // id of the player
   teamId: string; // id of the players team
   userId: string; // id of the user who owns this player
