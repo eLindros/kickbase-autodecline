@@ -1,3 +1,5 @@
+import { LeagueUserStandig } from './Login';
+
 export interface Leagues {
   leagues: League[];
   err: number;
@@ -16,6 +18,7 @@ export interface League {
   mu: number; // max count of users in league 18
   ap: number; // ?? 6860
   pub: boolean; // is league public
+  lm?: LeagueUserStandig;
   gm: number; // ?? 1
   mpl: boolean; // ?? true
   pl: number; // ?? 18

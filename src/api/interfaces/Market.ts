@@ -1,9 +1,11 @@
+import { PlayerPosition, PlayerStatus } from './Players';
+
 export interface Market {
   c: boolean; // ??
-  players: Players[];
+  players: MarketPlayer[];
 }
 
-export interface Players {
+export interface MarketPlayer {
   id: string; // id of the player
   teamId: string; // id of the players team
   userId: string; // id of the user who owns this player
@@ -26,26 +28,7 @@ export interface Players {
   marketValueTrend: number; // 2
 }
 
-enum PlayerStatus {
-  fit = 0,
-  injured = 1,
-  stricken = 2,
-  'recover training' = 4,
-  'red card' = 8,
-  'second yellow card' = 16,
-  'not in team' = 64,
-  'left the league' = 128,
-  'away' = 256,
-}
-
-enum PlayerPosition {
-  goalkeeper = 1,
-  defender = 2,
-  midfielder = 3,
-  forward = 4,
-}
-
-interface Offers {
+export interface Offers {
   id: string; // ?? id of the offer
   userId?: string; // id of the user who made this offer
   userName?: string; // name of this user
