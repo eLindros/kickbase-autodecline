@@ -17,10 +17,9 @@ app.get('/', async (_req: Request, res: Response) => {
 
 var port = process.env.PORT || '3000';
 
-
-cron.schedule("*/15 * * * * *", function () {
-  console.log("---------------------");
-  console.log("running a task every 15 seconds");
+cron.schedule('0 23-20 * * *', function () {
+  console.log('---------------------');
+  console.log('running a task: 0 23-20 * * *');
 });
 
 app.set('port', port);
