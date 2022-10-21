@@ -1,4 +1,5 @@
-import { Market, MarketPlayer, Offers } from './api/interfaces';
+import { Market, MarketPlayer, Offer } from './api/interfaces';
+import { Player } from './api/interfaces/Players';
 import {
   init,
   login,
@@ -6,6 +7,46 @@ import {
   getMarket,
   getUserId,
 } from './api/KickbaseApi';
+
+type PlayerType = MarketPlayer | Player;
+
+interface hasOffers {
+  offers: Offer[];
+}
+
+// const filter =
+//   <T>(predicate: (elem: T) => Boolean) =>
+//   (array: T[]) =>
+//     array.filter(predicate);
+
+const hasUserId =
+  (userId: string): ((player: PlayerType) => boolean) =>
+  (player: PlayerType): boolean =>
+    player.userId === userId;
+
+const hasOffer = (player: MarketPlayer): boolean =>
+  player.offers && player.offers.length > 0;
+
+const isHighOffer =
+  (
+    offer_threshold: number
+  ): ((player: MarketPlayer) => (offer: Offer) => boolean) =>
+  (player: MarketPlayer): ((offer: Offer) => boolean) =>
+  (offer: Offer): boolean =>
+    offer.price / player.marketValue - 1 > offer_threshold;
+
+const hasHighOffers =
+  (offer_threshold: number): ((player: MarketPlayer) => boolean) =>
+  (player: MarketPlayer): boolean => {
+    const highOffers: Offer[] = player.offers.filter(
+      isHighOffer(offer_threshold)(player)
+    );
+    if (highOffers.length == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
 // calculate too low offers
 const getUsersPlayersWithTooLowOffers = (
@@ -15,28 +56,12 @@ const getUsersPlayersWithTooLowOffers = (
 ): MarketPlayer[] => {
   if (market.players && market.players.length) {
     const players = market.players;
-    const userPlayers = players.filter(
-      (player: MarketPlayer): Boolean => player.userId === userId
-    );
+    const userPlayers = players.filter(hasUserId(userId));
     if (userPlayers.length) {
-      const userPlayersWithOffers = userPlayers.filter(
-        (player: MarketPlayer): Boolean =>
-          player.offers && player.offers.length > 0
-      );
+      const userPlayersWithOffers = userPlayers.filter(hasOffer);
       if (userPlayersWithOffers.length) {
         const userPlayersWithTooLowOffers = userPlayersWithOffers.filter(
-          (player: MarketPlayer): Boolean => {
-            const highOffers: Offers[] = player.offers.filter(
-              (offer: Offers): boolean => {
-                return offer.price / player.marketValue - 1 > offer_threshold;
-              }
-            );
-            if (highOffers.length == 0) {
-              return true;
-            } else {
-              return false;
-            }
-          }
+          hasHighOffers(offer_threshold)
         );
 
         return userPlayersWithTooLowOffers;

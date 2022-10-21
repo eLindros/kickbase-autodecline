@@ -23,12 +23,12 @@ export interface MarketPlayer {
   price: number; // price which the user wants for the player
   date: string; // time when the player was put on the market
   expiry: number; // ?? number in seconds till the player is on the market
-  offers: Offers[];
+  offers: Offer[];
   lus: number; // ??
   marketValueTrend: number; // 2
 }
 
-export interface Offers {
+export interface Offer {
   id: string; // ?? id of the offer
   userId?: string; // id of the user who made this offer
   userName?: string; // name of this user
