@@ -23,7 +23,7 @@ cron.schedule('0 0-20,23 * * *', function () {
   console.log(new Date());
 },
 {
-   schedule: true,
+   scheduled: true,
 	 timezone: "Europe/Berlin"
  }
 );
