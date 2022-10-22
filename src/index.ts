@@ -21,7 +21,11 @@ cron.schedule('0 0-20,23 * * *', function () {
   console.log('---------------------');
   console.log('running a task: 0 23-20 * * *');
   console.log(new Date());
-});
+},
+{
+   timezone: "Europe/Berlin"
+ }
+);
 
 app.set('port', port);
 app.listen(port);
