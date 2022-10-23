@@ -22,7 +22,7 @@ export interface Player {
   marketValue: number;
   marketValueTrend: number;
   dayStatus: number;
-  price: number;
+  price?: number; // only if on market
 }
 
 export enum PlayerStatus {

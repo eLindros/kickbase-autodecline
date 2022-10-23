@@ -2,9 +2,12 @@ import './config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-// import cron from 'node-cron';
 import schedule from 'node-schedule';
-import { autodecline } from './kickbase-autodecline';
+import {
+  setup,
+  declineLowOffers,
+  putAllPlayersOnMarket,
+} from './kickbase-autodecline';
 
 const app = express();
 
@@ -12,26 +15,45 @@ app.use(cors());
 app.use(morgan('combined'));
 
 app.get('/', async (_req: Request, res: Response) => {
-  var result = await autodecline();
-  res.json(result);
+  res.send('Nothing to show.');
 });
 
 var port = process.env.PORT || '3000';
 
-const rule = new schedule.RecurrenceRule();
-rule.minute = 0;
-rule.hour = [new schedule.Range(0, 20), 23];
-rule.tz = 'Europe/Berlin';
+const ruleDeclineLowOffers = new schedule.RecurrenceRule();
+ruleDeclineLowOffers.minute = 0;
+ruleDeclineLowOffers.hour = [new schedule.Range(0, 20), 23];
+ruleDeclineLowOffers.tz = 'Europe/Berlin';
 
-const job = schedule.scheduleJob(rule, function () {
-  // cron.schedule('0 0-20,23 * * *', function () {
-  console.log('---------------------');
-  console.log('running a task: 0 23-20 * * *');
-  console.log(new Date());
-  // },
-  // {
-  //    scheduled: true,
-  // 	 timezone: "Europe/Berlin"
+const rulePutAllOnMarket = new schedule.RecurrenceRule();
+rulePutAllOnMarket.minute = 10;
+
+// const ruleLogin = new schedule.RecurrenceRule();
+// ruleLogin.minute = 55;
+// ruleLogin.hour = 0;
+// ruleDeclineLowOffers.tz = 'Europe/Berlin';
+
+// schedule.scheduleJob(ruleLogin, async () => {
+//   const response = await setup();
+//   if (response) {
+//     let { leagueId, userId } = response;
+//   }
+// });
+
+schedule.scheduleJob(ruleDeclineLowOffers, async () => {
+  const response = await setup();
+  if (response) {
+    const { leagueId, userId } = response;
+    declineLowOffers(leagueId, userId);
+  }
+});
+
+schedule.scheduleJob(rulePutAllOnMarket, async () => {
+  const response = await setup();
+  if (response) {
+    const { leagueId, userId } = response;
+    putAllPlayersOnMarket(leagueId, userId);
+  }
 });
 
 app.set('port', port);

@@ -6,6 +6,9 @@ import {
   getLeagueId,
   getMarket,
   getUserId,
+  removePlayerFromMarket,
+  getPlayers,
+  putPlayerOnMarket,
 } from './api/KickbaseApi';
 
 type PlayerType = MarketPlayer | Player;
@@ -71,11 +74,15 @@ const getUsersPlayersWithTooLowOffers = (
   return [];
 };
 
-// every hour: put all player without offer on market
+const sleep = (ms: number) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+};
 
-// every hour: remove player with too low offer from market
-
-export const autodecline = async () => {
+export const setup = async (): Promise<
+  { leagueId: string; userId: string } | undefined
+> => {
   // Login to Kickbase => Token
   const user: string = process.env.KICKBASE_USER || 'none';
   const password: string = process.env.KICKBASE_PASSWORD || 'none';
@@ -83,17 +90,68 @@ export const autodecline = async () => {
   init();
   const [loginError, loginData] = await login(user, password);
 
-  // Get all players with market values and offers
+  // Get all players with market values and too low offers
   if (loginData) {
     const [errorLeagueId, leagueId] = getLeagueId(0, loginData);
     const [errorUserId, userId] = getUserId(loginData);
-    if (errorLeagueId) console.log(errorLeagueId);
-    if (leagueId) {
-      const [errorMarket, market] = await getMarket(leagueId);
-      if (errorMarket) console.log(errorMarket);
-      if (market && userId) {
-        return getUsersPlayersWithTooLowOffers(market, userId, 0.6 / 100);
-      }
-    }
+    if (errorLeagueId) console.error(errorLeagueId);
+    if (errorUserId) console.error(errorUserId);
+    if (leagueId && userId) return { leagueId, userId };
+    return undefined;
+  }
+};
+
+export const declineLowOffers = async (leagueId: string, userId: string) => {
+  const [errorMarket, market] = await getMarket(leagueId);
+  if (errorMarket) console.log(errorMarket);
+  if (market && userId) {
+    const offer_threshold = process.env.OFFER_THRESHOLD
+      ? parseFloat(process.env.OFFER_THRESHOLD)
+      : 0.6;
+    const playersWithTooLowOffers = getUsersPlayersWithTooLowOffers(
+      market,
+      userId,
+      offer_threshold / 100
+    );
+    playersWithTooLowOffers.forEach(async (player: MarketPlayer) => {
+      console.log(
+        `%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            Remove player ${player.firstName} ${player.lastName} from market.`
+      );
+      const [error, response] = await removePlayerFromMarket(
+        leagueId,
+        player.id
+      );
+      if (error) console.error(error);
+      if (response?.errMsg) console.error(response.errMsg);
+      sleep(500);
+    });
+  }
+};
+
+export const putAllPlayersOnMarket = async (
+  leagueId: string,
+  userId: string
+) => {
+  const [errorPlayers, players] = await getPlayers(leagueId, userId);
+  if (errorPlayers) console.error(errorPlayers);
+  if (players && players.players) {
+    const playersNotOnMarket = players.players.filter(
+      (player: Player): Boolean => ('price' in player ? false : true)
+    );
+    playersNotOnMarket.forEach(async (player: Player) => {
+      console.log(
+        `%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            Put player ${player.firstName} ${player.lastName} on market.`
+      );
+      const [error, response] = await putPlayerOnMarket(
+        leagueId,
+        player.id,
+        player.marketValue * (Math.random() * 0.06)
+      );
+      if (error) console.error(error);
+      if (response?.errMsg) console.error(response.errMsg);
+      sleep(500);
+    });
   }
 };
