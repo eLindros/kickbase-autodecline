@@ -147,7 +147,7 @@ export const putAllPlayersOnMarket = async (
       const [error, response] = await putPlayerOnMarket(
         leagueId,
         player.id,
-        player.marketValue * Math.floor((Math.random() * 0.06))
+        player.marketValue 
       );
       if (error) console.error(error);
       if (response?.errMsg) console.error(response.errMsg);
