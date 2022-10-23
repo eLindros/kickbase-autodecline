@@ -5,6 +5,8 @@ import {
   Leagues,
   Market,
   MarketPlayer,
+	Players,
+	Player
   User,
 } from './interfaces';
 
@@ -86,5 +88,32 @@ export const getMarket = async (
   return axiosCall<Market>({
     url: marketUrl,
     method: 'GET',
+  });
+};
+
+export const getPlayers = async (
+  leagueId: string,
+	userId: string
+): Promise<AxiosCallResponse<Players>> => {
+const playersURL: string = `/leagues/${leagueId}/users/${userId}/players`;	
+  return axiosCall<Players>({
+    url: playersURL,
+    method: 'GET'
+  });
+};
+
+export const putPlayerOnMarket = async (
+  leagueId: string,
+	playerId: string,
+	price: number
+): Promise<AxiosCallResponse<Players>> => {
+	const marketUrl: string = `/leagues/${leagueId}${kickbaseApiUrls.market}`;
+  return axiosCall<Players>({
+    url: playersURL,
+    method: 'PUT',
+		data: {
+			playerId,
+			price
+		}
   });
 };

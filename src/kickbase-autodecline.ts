@@ -48,7 +48,7 @@ const hasHighOffers =
     }
   };
 
-// calculate too low offers
+// get player with too too low offers
 const getUsersPlayersWithTooLowOffers = (
   market: Market,
   userId: string,
