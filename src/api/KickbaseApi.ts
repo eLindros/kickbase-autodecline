@@ -5,6 +5,8 @@ import {
   Leagues,
   Market,
   MarketPlayer,
+  Players,
+  Player,
   User,
 } from './interfaces';
 
@@ -25,6 +27,11 @@ interface KickbaseApiResponses {
 interface KickbaseData {
   leagues?: League[];
   market?: MarketPlayer[];
+}
+
+interface KickbaseError {
+  err: number;
+  errMsg?: string;
 }
 
 export const init = (): void => {
@@ -86,5 +93,43 @@ export const getMarket = async (
   return axiosCall<Market>({
     url: marketUrl,
     method: 'GET',
+  });
+};
+
+export const getPlayers = async (
+  leagueId: string,
+  userId: string
+): Promise<AxiosCallResponse<Players>> => {
+  const playersURL: string = `/leagues/${leagueId}/users/${userId}/players`;
+  return axiosCall<Players>({
+    url: playersURL,
+    method: 'GET',
+  });
+};
+
+export const putPlayerOnMarket = async (
+  leagueId: string,
+  playerId: string,
+  price: number
+): Promise<AxiosCallResponse<KickbaseError>> => {
+  const marketUrl: string = `/leagues/${leagueId}${kickbaseApiUrls.market}`;
+  return axiosCall<KickbaseError>({
+    url: marketUrl,
+    method: 'POST',
+    data: {
+      playerId,
+      price,
+    },
+  });
+};
+
+export const removePlayerFromMarket = async (
+  leagueId: string,
+  playerId: string
+): Promise<AxiosCallResponse<KickbaseError>> => {
+  const marketUrl: string = `/leagues/${leagueId}${kickbaseApiUrls.market}/${playerId}`;
+  return axiosCall<KickbaseError>({
+    url: marketUrl,
+    method: 'DELETE',
   });
 };
