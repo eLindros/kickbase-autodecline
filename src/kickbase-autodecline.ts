@@ -129,7 +129,7 @@ export const declineLowOffers = async (leagueId: string, userId: string) => {
         } else {
           console.log(`${i}. ${player.firstName} ${player.lastName}`);
         }
-        i = i++;
+        i++;
         sleep(500);
       });
     } else {
@@ -165,7 +165,7 @@ export const putAllPlayersOnMarket = async (
         } else {
           console.log(`${i}. ${player.firstName} ${player.lastName}`);
         }
-        i = i++;
+        i++;
         sleep(500);
       });
     } else {
