@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import schedule from 'node-schedule';
+import { timestamp } from './helpers';
 import {
   setup,
   declineLowOffers,
@@ -26,25 +27,25 @@ ruleDeclineLowOffers.hour = [new schedule.Range(0, 20), 23];
 ruleDeclineLowOffers.tz = 'Europe/Berlin';
 
 const rulePutAllOnMarket = new schedule.RecurrenceRule();
-rulePutAllOnMarket.minute = 10;
+rulePutAllOnMarket.minute = 5;
 
 schedule.scheduleJob(ruleDeclineLowOffers, async () => {
-  const now = new Date();
-  console.log(`${now.toLocaleDateString()} | ${now.toLocaleTimeString()}`);
+  timestamp();
   const response = await setup();
   if (response) {
     const { leagueId, userId } = response;
     declineLowOffers(leagueId, userId);
+    timestamp();
   }
 });
 
 schedule.scheduleJob(rulePutAllOnMarket, async () => {
-  const now = new Date();
-  console.log(`${now.toLocaleDateString()} | ${now.toLocaleTimeString()}`);
+  timestamp();
   const response = await setup();
   if (response) {
     const { leagueId, userId } = response;
     putAllPlayersOnMarket(leagueId, userId);
+    timestamp();
   }
 });
 
