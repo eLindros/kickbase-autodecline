@@ -28,19 +28,9 @@ ruleDeclineLowOffers.tz = 'Europe/Berlin';
 const rulePutAllOnMarket = new schedule.RecurrenceRule();
 rulePutAllOnMarket.minute = 10;
 
-// const ruleLogin = new schedule.RecurrenceRule();
-// ruleLogin.minute = 55;
-// ruleLogin.hour = 0;
-// ruleDeclineLowOffers.tz = 'Europe/Berlin';
-
-// schedule.scheduleJob(ruleLogin, async () => {
-//   const response = await setup();
-//   if (response) {
-//     let { leagueId, userId } = response;
-//   }
-// });
-
 schedule.scheduleJob(ruleDeclineLowOffers, async () => {
+  const now = new Date();
+  console.log(`${now.toLocaleDateString()} | ${now.toLocaleTimeString()}`);
   const response = await setup();
   if (response) {
     const { leagueId, userId } = response;
@@ -49,6 +39,8 @@ schedule.scheduleJob(ruleDeclineLowOffers, async () => {
 });
 
 schedule.scheduleJob(rulePutAllOnMarket, async () => {
+  const now = new Date();
+  console.log(`${now.toLocaleDateString()} | ${now.toLocaleTimeString()}`);
   const response = await setup();
   if (response) {
     const { leagueId, userId } = response;

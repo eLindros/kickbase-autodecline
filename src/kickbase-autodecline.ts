@@ -1,5 +1,5 @@
-import { Market, MarketPlayer, Offer } from './api/interfaces';
-import { Player } from './api/interfaces/Players';
+import { Market, MarketPlayer, Offer } from "./api/interfaces";
+import { Player } from "./api/interfaces/Players";
 import {
   init,
   login,
@@ -9,7 +9,7 @@ import {
   removePlayerFromMarket,
   getPlayers,
   putPlayerOnMarket,
-} from './api/KickbaseApi';
+} from "./api/KickbaseApi";
 
 type PlayerType = MarketPlayer | Player;
 
@@ -84,8 +84,8 @@ export const setup = async (): Promise<
   { leagueId: string; userId: string } | undefined
 > => {
   // Login to Kickbase => Token
-  const user: string = process.env.KICKBASE_USER || 'none';
-  const password: string = process.env.KICKBASE_PASSWORD || 'none';
+  const user: string = process.env.KICKBASE_USER || "none";
+  const password: string = process.env.KICKBASE_PASSWORD || "none";
 
   init();
   const [loginError, loginData] = await login(user, password);
@@ -113,19 +113,28 @@ export const declineLowOffers = async (leagueId: string, userId: string) => {
       userId,
       offer_threshold / 100
     );
-    playersWithTooLowOffers.forEach(async (player: MarketPlayer) => {
-      console.log(
-        `%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            Remove player ${player.firstName} ${player.lastName} from market.`
-      );
-      const [error, response] = await removePlayerFromMarket(
-        leagueId,
-        player.id
-      );
-      if (error) console.error(error);
-      if (response?.errMsg) console.error(response.errMsg);
-      sleep(500);
-    });
+    if (playersWithTooLowOffers.length) {
+      let i = 1;
+      console.log(`The following players were removed from market:
+      <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<`);
+      playersWithTooLowOffers.forEach(async (player: MarketPlayer) => {
+        const [error, response] = await removePlayerFromMarket(
+          leagueId,
+          player.id
+        );
+        if (error) {
+          console.error(error);
+        } else if (response?.errMsg) {
+          console.error(response.errMsg);
+        } else {
+          console.log(`${i}. ${player.firstName} ${player.lastName}`);
+        }
+        i = i++;
+        sleep(500);
+      });
+    } else {
+      console.log(`No players with too low offers left.`);
+    }
   }
 };
 
@@ -137,21 +146,30 @@ export const putAllPlayersOnMarket = async (
   if (errorPlayers) console.error(errorPlayers);
   if (players && players.players) {
     const playersNotOnMarket = players.players.filter(
-      (player: Player): Boolean => ('price' in player ? false : true)
+      (player: Player): Boolean => ("price" in player ? false : true)
     );
-    playersNotOnMarket.forEach(async (player: Player) => {
-      console.log(
-        `%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            Put player ${player.firstName} ${player.lastName} on market.`
-      );
-      const [error, response] = await putPlayerOnMarket(
-        leagueId,
-        player.id,
-        player.marketValue 
-      );
-      if (error) console.error(error);
-      if (response?.errMsg) console.error(response.errMsg);
-      sleep(500);
-    });
+    if (playersNotOnMarket.length) {
+      let i = 1;
+      console.log(`The following players were put on market:
+      >>>>>>>>>>>>>>>>>>>>>>>>>>>`);
+      playersNotOnMarket.forEach(async (player: Player) => {
+        const [error, response] = await putPlayerOnMarket(
+          leagueId,
+          player.id,
+          player.marketValue
+        );
+        if (error) {
+          console.error(error);
+        } else if (response?.errMsg) {
+          console.error(response.errMsg);
+        } else {
+          console.log(`${i}. ${player.firstName} ${player.lastName}`);
+        }
+        i = i++;
+        sleep(500);
+      });
+    } else {
+      console.log(`All players are already on market.`);
+    }
   }
 };
