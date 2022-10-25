@@ -1,5 +1,5 @@
-import { Market, MarketPlayer, Offer } from "./api/interfaces";
-import { Player } from "./api/interfaces/Players";
+import { Market, MarketPlayer, Offer } from './api/interfaces';
+import { Player } from './api/interfaces/Players';
 import {
   init,
   login,
@@ -9,18 +9,14 @@ import {
   removePlayerFromMarket,
   getPlayers,
   putPlayerOnMarket,
-} from "./api/KickbaseApi";
+} from './api/KickbaseApi';
+import { KICKBASE_PASSWORD, KICKBASE_USER, OFFER_THRESHOLD } from './settings';
 
 type PlayerType = MarketPlayer | Player;
 
 interface hasOffers {
   offers: Offer[];
 }
-
-// const filter =
-//   <T>(predicate: (elem: T) => Boolean) =>
-//   (array: T[]) =>
-//     array.filter(predicate);
 
 const hasUserId =
   (userId: string): ((player: PlayerType) => boolean) =>
@@ -84,13 +80,13 @@ export const setup = async (): Promise<
   { leagueId: string; userId: string } | undefined
 > => {
   // Login to Kickbase => Token
-  const user: string = process.env.KICKBASE_USER || "none";
-  const password: string = process.env.KICKBASE_PASSWORD || "none";
+  const user: string = KICKBASE_USER;
+  const password: string = KICKBASE_PASSWORD;
 
   init();
   const [loginError, loginData] = await login(user, password);
 
-  // Get all players with market values and too low offers
+  // Get all leagueId and userId
   if (loginData) {
     const [errorLeagueId, leagueId] = getLeagueId(0, loginData);
     const [errorUserId, userId] = getUserId(loginData);
@@ -101,13 +97,12 @@ export const setup = async (): Promise<
   }
 };
 
+// decline all too low offers and log about it
 export const declineLowOffers = async (leagueId: string, userId: string) => {
   const [errorMarket, market] = await getMarket(leagueId);
   if (errorMarket) console.log(errorMarket);
   if (market && userId) {
-    const offer_threshold = process.env.OFFER_THRESHOLD
-      ? parseFloat(process.env.OFFER_THRESHOLD)
-      : 0.6;
+    const offer_threshold = OFFER_THRESHOLD;
     const playersWithTooLowOffers = getUsersPlayersWithTooLowOffers(
       market,
       userId,
@@ -138,6 +133,7 @@ export const declineLowOffers = async (leagueId: string, userId: string) => {
   }
 };
 
+// put all players not currently on market on it and log about it
 export const putAllPlayersOnMarket = async (
   leagueId: string,
   userId: string
@@ -146,7 +142,7 @@ export const putAllPlayersOnMarket = async (
   if (errorPlayers) console.error(errorPlayers);
   if (players && players.players) {
     const playersNotOnMarket = players.players.filter(
-      (player: Player): Boolean => ("price" in player ? false : true)
+      (player: Player): Boolean => ('price' in player ? false : true)
     );
     if (playersNotOnMarket.length) {
       let i = 1;
