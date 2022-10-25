@@ -17,7 +17,7 @@ Two minutes after every full hour all players which are currently not on market 
 ## Deployment
 You can deploy the app for instance here: 
 
-[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&name=kickbase-autodeclinetest&repository=github.com/eLindros/kickbase-autodecline&branch=main&run_command=npm%run%start&build_command=npm%run%build&ports=8080&env[KICKBASE_USER]=&env[KICKBASE_PASSWORD]=&env[OFFER_THRESHOLD]=0.6)
+[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&name=kickbase-autodecline&repository=github.com/eLindros/kickbase-autodecline&branch=main&run_command=npm%20run%20start&build_command=npm%20run%20build&ports=8080&env[KICKBASE_USER]=&env[KICKBASE_PASSWORD]=&env[OFFER_THRESHOLD]=0.6)
 
 Or your provide of choice.
 
