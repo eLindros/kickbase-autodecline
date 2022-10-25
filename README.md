@@ -19,7 +19,7 @@ You can deploy the app for instance here:
 
 [![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&name=kickbase-autodecline&repository=github.com/eLindros/kickbase-autodecline&branch=main&run_command=npm%20run%20start&build_command=npm%20run%20build&ports=8080&env[KICKBASE_USER]=&env[KICKBASE_PASSWORD]=&env[OFFER_THRESHOLD]=0.6)
 
-Or your provide of choice.
+Or your provider of choice.
 
 ## Credits
 Ronny Klein ([Buy Me A Coffee](https://www.buymeacoffee.com/kleindev), github: [@elindros](https://github.com/eLindros)).
