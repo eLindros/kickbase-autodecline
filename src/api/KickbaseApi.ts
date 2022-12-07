@@ -1,5 +1,6 @@
 import axios, { Axios, AxiosInstance, AxiosRequestConfig } from 'axios';
 import {
+  BonusCollect,
   Login,
   League,
   Leagues,
@@ -84,6 +85,16 @@ export const getUserId = (login: Login): AxiosCallResponse<string> => {
     return [null, login.user.id];
   }
   return ['Error: Keine UserId gefunden.', null];
+};
+
+export const postBonusCollect = async (
+  leagueId: string
+): Promise<AxiosCallResponse<BonusCollect>> => {
+  const url: string = `/leagues/${leagueId}/collectgift`;
+  return axiosCall<BonusCollect>({
+    url: url,
+    method: 'POST',
+  });
 };
 
 export const getMarket = async (

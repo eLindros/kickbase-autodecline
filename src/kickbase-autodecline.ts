@@ -6,6 +6,7 @@ import {
   getLeagueId,
   getMarket,
   getUserId,
+  postBonusCollect,
   removePlayerFromMarket,
   getPlayers,
   putPlayerOnMarket,
@@ -94,6 +95,19 @@ export const setup = async (): Promise<
     if (errorUserId) console.error(errorUserId);
     if (leagueId && userId) return { leagueId, userId };
     return undefined;
+  }
+};
+
+// collects the daily bonus
+export const collectBonus = async (leagueId: string) => {
+  const [error, data] = await postBonusCollect(leagueId);
+  if (data) {
+    const { err, errMsg } = data;
+    if (err === 0) console.log('Bonus successfully collected');
+    if (errMsg) console.error(errMsg);
+  }
+  if (error) {
+    console.error(error);
   }
 };
 

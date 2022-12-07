@@ -21,6 +21,10 @@ export const TIME_ZONE = 'Europe/Berlin';
 // Locale for logging the timestamps
 export const DATE_LOCALE = 'de-DE';
 
+// Which minute of which hour shall the bonus get be collected?
+export const SCHEDULE_GET_BONUS_MINUTE = 30;
+export const SCHEDULE_GET_BONUS_HOUR = 6;
+
 // Which minute of the hours shall the decline happen?
 export const SCHEDULE_DECLINE_MINUTE = 0;
 

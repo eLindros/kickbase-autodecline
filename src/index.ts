@@ -1,7 +1,11 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import { scheduleAutoDecline, schedulePutOnMarket } from './schedules';
+import {
+  scheduleBonusCollection,
+  scheduleAutoDecline,
+  schedulePutOnMarket,
+} from './schedules';
 import { PORT } from './settings';
 
 // initialize express server
@@ -17,6 +21,9 @@ app.use(morgan('combined'));
 app.get('/', async (_req: Request, res: Response) => {
   res.send('Nothing to show.');
 });
+
+// call schedule for bonus collection
+scheduleBonusCollection;
 
 // call schedule for autodecline all too low offers
 scheduleAutoDecline;
