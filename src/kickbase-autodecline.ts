@@ -35,7 +35,7 @@ const isHighOffer =
   (offer: Offer): boolean =>
     offer.price / player.marketValue - 1 > offer_threshold;
 
-const hasHighOffers =
+const hasNoHighOffers =
   (offer_threshold: number): ((player: MarketPlayer) => boolean) =>
   (player: MarketPlayer): boolean => {
     const highOffers: Offer[] = player.offers.filter(
@@ -48,8 +48,31 @@ const hasHighOffers =
     }
   };
 
+const isNotExpiredOffer =
+  (offer: Offer): ((offer: Offer) => boolean) =>
+  (offer: Offer): boolean => {
+    if (offer.validUntilDate) {
+      const dateOfExpiration = new Date(offer.validUntilDate);
+      const now = new Date();
+      return dateOfExpiration > now;
+    } else {
+      return true;
+    }
+  };
+
+const hasNonExpiredOffer =
+  (): ((player: MarketPlayer) => boolean) =>
+  (player: MarketPlayer): boolean => {
+    const notExpiredOffers: Offer[] = player.offers.filter(isNotExpiredOffer);
+    if (notExpiredOffers.length == 0) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
 // get player with too too low offers
-const getUsersPlayersWithTooLowOffers = (
+const getUsersPlayersWithTooLowOrExpiredOffers = (
   market: Market,
   userId: string,
   offer_threshold: number
@@ -61,10 +84,14 @@ const getUsersPlayersWithTooLowOffers = (
       const userPlayersWithOffers = userPlayers.filter(hasOffer);
       if (userPlayersWithOffers.length) {
         const userPlayersWithTooLowOffers = userPlayersWithOffers.filter(
-          hasHighOffers(offer_threshold)
+          hasNoHighOffers(offer_threshold)
         );
+        const userPlayersWithExpiredOffers =
+          userPlayersWithOffers.filter(hasNonExpiredOffer);
 
-        return userPlayersWithTooLowOffers;
+        const userPlayersWithTooLowOrExpiredOffers =
+          userPlayersWithTooLowOffers.concat(userPlayersWithExpiredOffers);
+        return userPlayersWithTooLowOrExpiredOffers;
       }
     }
   }
@@ -117,7 +144,7 @@ export const declineLowOffers = async (leagueId: string, userId: string) => {
   if (errorMarket) console.log(errorMarket);
   if (market && userId) {
     const offer_threshold = OFFER_THRESHOLD;
-    const playersWithTooLowOffers = getUsersPlayersWithTooLowOffers(
+    const playersWithTooLowOffers = getUsersPlayersWithTooLowOrExpiredOffers(
       market,
       userId,
       offer_threshold / 100
@@ -182,4 +209,9 @@ export const putAllPlayersOnMarket = async (
       console.log(`All players are already on market.`);
     }
   }
+};
+
+export const exportedForTesting = {
+  isNotExpiredOffer,
+  hasNonExpiredOffer,
 };

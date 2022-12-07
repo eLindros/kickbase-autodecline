@@ -32,7 +32,7 @@ export interface Offer {
   id: string; // ?? id of the offer
   userId?: string; // id of the user who made this offer
   userName?: string; // name of this user
-  userProfileUrl: string; // url of this users pic
+  userProfileUrl?: string; // url of this users pic
   price: number; // amount of the offer
   date: string; // date string when the offer was made
   validUntilDate?: string; // date string when the offer will expire
