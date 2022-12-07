@@ -1,6 +1,8 @@
 # Kickbase Autodecline
 This is an node-express server coupled with node-schedule in order to hourly decline too low offers in the fantasy football game Kickbase.
 
+It also collects your bonus every day.
+
 ## Settings
 Settings can be changed in src/settings.ts.
 
