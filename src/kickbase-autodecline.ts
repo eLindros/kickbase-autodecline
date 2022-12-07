@@ -105,9 +105,10 @@ export const collectBonus = async (leagueId: string) => {
     const { err, errMsg } = data;
     if (err === 0) console.log('Bonus successfully collected');
     if (errMsg) console.error(errMsg);
-  }
-  if (error) {
-    console.error(error);
+  } else {
+    if (error) {
+      console.error(error);
+    }
   }
 };
 
