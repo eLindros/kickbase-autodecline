@@ -1,5 +1,6 @@
-import { Market, MarketPlayer, Offer } from './api/interfaces';
-import { Player } from './api/interfaces/Players';
+import { AxiosError } from "axios";
+import { Market, MarketPlayer, Offer } from "./api/interfaces";
+import { Player } from "./api/interfaces/Players";
 import {
   init,
   login,
@@ -10,8 +11,8 @@ import {
   removePlayerFromMarket,
   getPlayers,
   putPlayerOnMarket,
-} from './api/KickbaseApi';
-import { KICKBASE_PASSWORD, KICKBASE_USER, OFFER_THRESHOLD } from './settings';
+} from "./api/KickbaseApi";
+import { KICKBASE_PASSWORD, KICKBASE_USER, OFFER_THRESHOLD } from "./settings";
 
 type PlayerType = MarketPlayer | Player;
 
@@ -103,16 +104,14 @@ export const collectBonus = async (leagueId: string) => {
   const [error, data] = await postBonusCollect(leagueId);
   if (data) {
     const { err, errMsg } = data;
-    if (err === 0) console.log('Bonus successfully collected');
+    if (err === 0) console.log("Bonus successfully collected");
     if (errMsg) console.error(errMsg);
+  }
+  if (error) {
+    const err = error as AxiosError;
+    console.error(err.response?.data);
   } else {
-    if (error) {
-      if(error.response && error.response.data) {
-        console.error(error.response.data);
-      } else {
-      console.error(error);
-      }
-    }
+    console.error(error);
   }
 };
 
@@ -161,7 +160,7 @@ export const putAllPlayersOnMarket = async (
   if (errorPlayers) console.error(errorPlayers);
   if (players && players.players) {
     const playersNotOnMarket = players.players.filter(
-      (player: Player): Boolean => ('price' in player ? false : true)
+      (player: Player): Boolean => ("price" in player ? false : true)
     );
     if (playersNotOnMarket.length) {
       let i = 1;
