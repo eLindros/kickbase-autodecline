@@ -107,7 +107,11 @@ export const collectBonus = async (leagueId: string) => {
     if (errMsg) console.error(errMsg);
   } else {
     if (error) {
+      if(error.response && error.response.data) {
+        console.error(error.response.data);
+      } else {
       console.error(error);
+      }
     }
   }
 };
