@@ -24,8 +24,12 @@ const hasUserId =
   (player: PlayerType): boolean =>
     player.userId === userId;
 
-const hasOffer = (player: MarketPlayer): boolean =>
-  player.offers && player.offers.length > 0;
+const hasOffer = (player: MarketPlayer): boolean => {
+  if (player.offers && player.offers.length > 0) {
+    return true;
+  }
+  return false;
+};
 
 const isHighOffer =
   (
@@ -38,38 +42,40 @@ const isHighOffer =
 const hasNoHighOffers =
   (offer_threshold: number): ((player: MarketPlayer) => boolean) =>
   (player: MarketPlayer): boolean => {
-    const highOffers: Offer[] = player.offers.filter(
-      isHighOffer(offer_threshold)(player)
-    );
-    if (highOffers.length == 0) {
-      return true;
-    } else {
-      return false;
+    if (player.offers) {
+      const highOffers: Offer[] = player.offers.filter(
+        isHighOffer(offer_threshold)(player)
+      );
+      if (highOffers.length == 0) {
+        return true;
+      } else {
+        return false;
+      }
     }
+    return false;
   };
 
-const isNotExpiredOffer =
-  (offer: Offer): ((offer: Offer) => boolean) =>
-  (offer: Offer): boolean => {
-    if (offer.validUntilDate) {
-      const dateOfExpiration = new Date(offer.validUntilDate);
-      const now = new Date();
-      return dateOfExpiration > now;
-    } else {
-      return true;
-    }
-  };
+const isNotExpiredOffer = (offer: Offer): boolean => {
+  if (offer.validUntilDate) {
+    const dateOfExpiration = new Date(offer.validUntilDate);
+    const now = new Date();
+    return dateOfExpiration > now;
+  } else {
+    return true;
+  }
+};
 
-const hasNonExpiredOffer =
-  (): ((player: MarketPlayer) => boolean) =>
-  (player: MarketPlayer): boolean => {
+const hasNonExpiredOffer = (player: MarketPlayer): boolean => {
+  if (player.offers) {
     const notExpiredOffers: Offer[] = player.offers.filter(isNotExpiredOffer);
     if (notExpiredOffers.length == 0) {
       return false;
     } else {
       return true;
     }
-  };
+  }
+  return false;
+};
 
 // get player with too too low offers
 const getUsersPlayersWithTooLowOrExpiredOffers = (
@@ -214,4 +220,5 @@ export const putAllPlayersOnMarket = async (
 export const exportedForTesting = {
   isNotExpiredOffer,
   hasNonExpiredOffer,
+  hasOffer,
 };

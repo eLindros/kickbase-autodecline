@@ -23,7 +23,7 @@ export interface MarketPlayer {
   price: number; // price which the user wants for the player
   date: string; // time when the player was put on the market
   expiry: number; // ?? number in seconds till the player is on the market
-  offers: Offer[];
+  offers?: Offer[];
   lus: number; // ??
   marketValueTrend: number; // 2
 }
