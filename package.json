@@ -7,9 +7,9 @@
     "start:build": "npx tsc -w",
     "start:run": "nodemon build/index.js",
     "dev": "concurrently npm:start:*",
-    "build": "tsc",
-    "test": "jest --watch",
-    "start": "node build/index.js"
+    "build": "tsc -p tsconfig-build.json",
+    "start:test": "jest --watch",
+    "start": "node dist/index.js"
   },
   "author": "Ronny Klein",
   "license": "ISC",
