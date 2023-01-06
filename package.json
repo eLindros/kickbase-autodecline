@@ -4,8 +4,8 @@
   "description": "Automatic decline of too low offers in the Kickbase game",
   "main": "index.js",
   "scripts": {
-    "start:build": "npx tsc -w",
-    "start:run": "nodemon build/index.js",
+    "start:build": "npx tsc -w -p tsconfig.json",
+    "start:run": "nodemon build/src/index.js",
     "dev": "concurrently npm:start:*",
     "build": "tsc -p tsconfig-build.json",
     "start:test": "jest --watch",
