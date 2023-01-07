@@ -65,13 +65,13 @@ const isNotExpiredOffer = (offer: Offer): boolean => {
   }
 };
 
-const hasNonExpiredOffer = (player: MarketPlayer): boolean => {
+const hasOnlyExpiredOffers = (player: MarketPlayer): boolean => {
   if (player.offers) {
     const notExpiredOffers: Offer[] = player.offers.filter(isNotExpiredOffer);
     if (notExpiredOffers.length == 0) {
-      return false;
-    } else {
       return true;
+    } else {
+      return false;
     }
   }
   return false;
@@ -93,7 +93,7 @@ const getUsersPlayersWithTooLowOrExpiredOffers = (
           hasNoHighOffers(offer_threshold)
         );
         const userPlayersWithExpiredOffers =
-          userPlayersWithOffers.filter(hasNonExpiredOffer);
+          userPlayersWithOffers.filter(hasOnlyExpiredOffers);
 
         const userPlayersWithTooLowOrExpiredOffers =
           userPlayersWithTooLowOffers.concat(userPlayersWithExpiredOffers);
@@ -218,7 +218,10 @@ export const putAllPlayersOnMarket = async (
 };
 
 export const exportedForTesting = {
-  isNotExpiredOffer,
-  hasNonExpiredOffer,
   hasOffer,
+  isHighOffer,
+  hasNoHighOffers,
+  isNotExpiredOffer,
+  hasOnlyExpiredOffers,
+  getUsersPlayersWithTooLowOrExpiredOffers,
 };

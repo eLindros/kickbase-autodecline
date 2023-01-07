@@ -8,12 +8,13 @@ export interface Market {
 export interface MarketPlayer {
   id: string; // id of the player
   teamId: string; // id of the players team
-  userId: string; // id of the user who owns this player
-  userProfile: string; // url of the users pic
-  username: string; // name of the user
+  userId?: string; // id of the user who owns this player
+  userProfile?: string; // url of the users pic
+  username?: string; // name of the user
   firstName: string; // first name of the player
   lastName: string; // last name of the player
-  profile: string; // url of the players pic
+  knownName?: string;
+  profile?: string; // url of the players pic
   status: PlayerStatus; // status of the player like 'fit', 'injured' etc.
   position: PlayerPosition; // position of the player like 'defender', 'goalkeeper' etc.
   number: number; // trikot number of the player

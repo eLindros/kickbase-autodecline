@@ -1,7 +1,20 @@
+import fs from 'fs';
 import { MarketPlayer, Offer } from '../src/api/interfaces';
 import { exportedForTesting } from '../src/kickbase-autodecline';
+import { OFFER_THRESHOLD } from '../src/settings';
+import { marketStub } from './marketStub';
 
-const { isNotExpiredOffer, hasNonExpiredOffer, hasOffer } = exportedForTesting;
+const {
+  hasOffer,
+  isHighOffer,
+  hasNoHighOffers,
+  isNotExpiredOffer,
+  hasOnlyExpiredOffers,
+  getUsersPlayersWithTooLowOrExpiredOffers,
+} = exportedForTesting;
+
+const userId = '118426';
+const offer_threshold = OFFER_THRESHOLD / 100;
 
 const playerStubWithoutOffer: MarketPlayer = {
   id: '43',
@@ -45,6 +58,78 @@ const modifyNowHour = (hour: number): string => {
   return now.toISOString();
 };
 
+describe('Filter: hasOffer', () => {
+  test('has no offer', () => {
+    expect(hasOffer(playerStubWithoutOffer)).toBe(false);
+  });
+
+  test('has offer(s)', () => {
+    expect(
+      hasOffer({
+        ...playerStubWithoutOffer,
+        offers: [offerStubWithoutValidationDate, getOfferStub(Date())],
+      })
+    ).toBe(true);
+  });
+});
+
+const getOfferWithPriceOverTreshold = (addToTreshold: number): Offer => {
+  return {
+    ...offerStubWithoutValidationDate,
+    price:
+      playerStubWithoutOffer.marketValue *
+      (1 + offer_threshold + addToTreshold),
+  };
+};
+
+describe('Filter: isHighOffer', () => {
+  test('offer is high enough', () => {
+    expect(
+      isHighOffer(offer_threshold)(playerStubWithoutOffer)(
+        getOfferWithPriceOverTreshold(0.1)
+      )
+    ).toBe(true);
+  });
+
+  test('offer is too low', () => {
+    expect(
+      isHighOffer(offer_threshold)(playerStubWithoutOffer)(
+        getOfferWithPriceOverTreshold(-0.1)
+      )
+    ).toBe(false);
+  });
+});
+
+describe('Filter: hasNoHighOffers', () => {
+  test('one offers is high enough', () => {
+    expect(
+      hasNoHighOffers(offer_threshold)({
+        ...playerStubWithoutOffer,
+        offers: [
+          getOfferWithPriceOverTreshold(0.1),
+          getOfferWithPriceOverTreshold(-0.1),
+        ],
+      })
+    ).toBe(false);
+  });
+
+  test('all offers are too low', () => {
+    expect(
+      hasNoHighOffers(offer_threshold)({
+        ...playerStubWithoutOffer,
+        offers: [
+          getOfferWithPriceOverTreshold(-0.1),
+          getOfferWithPriceOverTreshold(-0.1),
+        ],
+      })
+    ).toBe(true);
+  });
+
+  test('Market Stub 2 has a high offer', () => {
+    expect(hasNoHighOffers(offer_threshold)(marketStub.players[1])).toBe(false);
+  });
+});
+
 describe('Filter: isNotExpiredOffer', () => {
   const testExpirationDate = (validUntilDate: string): boolean => {
     const offer: Offer = { ...offerStubWithoutValidationDate, validUntilDate };
@@ -65,33 +150,18 @@ describe('Filter: isNotExpiredOffer', () => {
   });
 });
 
-describe('Filter: hasOffer', () => {
-  test('has no offer', () => {
-    expect(hasOffer(playerStubWithoutOffer)).toBe(false);
-  });
-
-  test('has offer(s)', () => {
-    expect(
-      hasOffer({
-        ...playerStubWithoutOffer,
-        offers: [offerStubWithoutValidationDate, getOfferStub(Date())],
-      })
-    ).toBe(true);
-  });
-});
-
-describe('Filter: hasNonExpiredOffer', () => {
+describe('Filter: hasOnlyExpiredOffers', () => {
   test('has no offer and therefore no expired offer', () => {
     const player: MarketPlayer = { ...playerStubWithoutOffer };
-    expect(hasNonExpiredOffer(player)).toBe(false);
+    expect(hasOnlyExpiredOffers(player)).toBe(false);
   });
 
-  test('has only expired offer', () => {
+  test('has only one expired offer', () => {
     const player: MarketPlayer = {
       ...playerStubWithoutOffer,
       offers: [getOfferStub(modifyNowHour(-1))],
     };
-    expect(hasNonExpiredOffer(player)).toBe(false);
+    expect(hasOnlyExpiredOffers(player)).toBe(true);
   });
 
   test('has only a non expired offer', () => {
@@ -99,14 +169,71 @@ describe('Filter: hasNonExpiredOffer', () => {
       ...playerStubWithoutOffer,
       offers: [getOfferStub(modifyNowHour(1))],
     };
-    expect(hasNonExpiredOffer(player)).toBe(true);
+    expect(hasOnlyExpiredOffers(player)).toBe(false);
   });
 
-  test('has a non expired and an expired offer => true', () => {
+  test('has a non expired and an expired offer => false', () => {
     const player: MarketPlayer = {
       ...playerStubWithoutOffer,
       offers: [getOfferStub(modifyNowHour(1)), getOfferStub(modifyNowHour(-1))],
     };
-    expect(hasNonExpiredOffer(player)).toBe(true);
+    expect(hasOnlyExpiredOffers(player)).toBe(false);
+  });
+
+  test('marketStub No. 2 is not expired', () => {
+    expect(hasOnlyExpiredOffers(marketStub.players[1])).toBe(false);
+  });
+});
+
+const writeResult = (): void => {
+  fs.writeFileSync(
+    './result.json',
+    JSON.stringify(
+      getUsersPlayersWithTooLowOrExpiredOffers(
+        marketStub,
+        userId,
+        offer_threshold
+      )
+    )
+  );
+};
+
+// writeResult();
+
+describe('Test getUsersPlayersWithTooLowOrExpiredOffers function', () => {
+  const result = getUsersPlayersWithTooLowOrExpiredOffers(
+    marketStub,
+    userId,
+    offer_threshold
+  );
+  test('empty market', () => {
+    expect(
+      getUsersPlayersWithTooLowOrExpiredOffers(
+        { c: true, players: [] },
+        userId,
+        offer_threshold
+      )
+    ).toEqual([]);
+  });
+
+  test('are all my players', () => {
+    expect(
+      result.length ==
+        result.filter(
+          (player: MarketPlayer): Boolean => player.userId == userId
+        ).length
+    ).toBe(true);
+  });
+
+  test('have all offers', () => {
+    expect(result.length == result.filter(hasOffer).length).toBe(true);
+  });
+
+  test(`have all offers below treshold ${offer_threshold} % or are expired`, () => {
+    expect(
+      result.length ==
+        result.filter(hasOnlyExpiredOffers).length +
+          result.filter(hasNoHighOffers(offer_threshold)).length
+    ).toBe(true);
   });
 });
