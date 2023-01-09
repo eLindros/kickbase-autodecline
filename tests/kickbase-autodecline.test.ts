@@ -1,8 +1,8 @@
 import fs from 'fs';
-import { MarketPlayer, Offer } from '../src/api/interfaces';
+import { Market, MarketPlayer, Offer } from '../src/api/interfaces';
 import { exportedForTesting } from '../src/kickbase-autodecline';
 import { OFFER_THRESHOLD } from '../src/settings';
-import { marketStub } from './marketStub';
+import { getMarketStub, marketStub } from './marketStub';
 
 const {
   hasOffer,
@@ -181,28 +181,83 @@ describe('Filter: hasOnlyExpiredOffers', () => {
   });
 
   test('marketStub No. 2 is not expired', () => {
+    let market = { ...marketStub };
+    market.players[1].offers![0].validUntilDate = modifyNowHour(+1);
     expect(hasOnlyExpiredOffers(marketStub.players[1])).toBe(false);
   });
 });
 
-const writeResult = (): void => {
+const writeResult = (stub: Market): void => {
   fs.writeFileSync(
     './result.json',
     JSON.stringify(
-      getUsersPlayersWithTooLowOrExpiredOffers(
-        marketStub,
-        userId,
-        offer_threshold
-      )
+      getUsersPlayersWithTooLowOrExpiredOffers(stub, userId, offer_threshold)
     )
   );
 };
 
-// writeResult();
+const getMyPlayerPositions = (stub: Market): void => {
+  let myPlayerPositions: number[] = [];
+  let myPlayerLastnames: string[] = [];
+  let i = 0;
+  stub.players.forEach((player: MarketPlayer): void => {
+    if (player.userId == userId) {
+      myPlayerPositions.push(i);
+      myPlayerLastnames.push(player.lastName);
+    }
+    i++;
+  });
+  console.log(myPlayerPositions);
+  console.log(myPlayerLastnames);
+};
+
+// getMyPlayerPositions(marketStub);
+
+const myPlayerNames = [
+  'Weiser',
+  'Akpoguma',
+  'Hummels',
+  'Brandt',
+  'Aránguiz',
+  'Sabitzer',
+  'Gikiewicz',
+  'Diallo',
+  'Lukébakio',
+  'Raum',
+  'Diaby',
+  'Coulibaly',
+  'Mavropanos',
+  'Lacroix',
+  'Hlozek',
+  'Kanga',
+  'Dolberg',
+];
+
+const validUntilDates = [
+  modifyNowHour(-7),
+  modifyNowHour(-6),
+  modifyNowHour(-5),
+  modifyNowHour(-4),
+  modifyNowHour(-3),
+  modifyNowHour(-2),
+  modifyNowHour(-1),
+  modifyNowHour(1),
+  modifyNowHour(2),
+  modifyNowHour(3),
+  modifyNowHour(2),
+  modifyNowHour(3),
+  modifyNowHour(1),
+  modifyNowHour(-2),
+  modifyNowHour(1),
+  modifyNowHour(1),
+  modifyNowHour(-2),
+];
+
+//writeResult(getMarketStub(validUntilDates, marketStub));
 
 describe('Test getUsersPlayersWithTooLowOrExpiredOffers function', () => {
   const result = getUsersPlayersWithTooLowOrExpiredOffers(
-    marketStub,
+    getMarketStub(validUntilDates, marketStub),
     userId,
     offer_threshold
   );
@@ -230,10 +285,23 @@ describe('Test getUsersPlayersWithTooLowOrExpiredOffers function', () => {
   });
 
   test(`have all offers below treshold ${offer_threshold} % or are expired`, () => {
-    expect(
-      result.length ==
-        result.filter(hasOnlyExpiredOffers).length +
-          result.filter(hasNoHighOffers(offer_threshold)).length
-    ).toBe(true);
+    const expiredOffers = result
+      .filter(hasOnlyExpiredOffers)
+      .map((player): string => player.id);
+    const tooLowOffers = result
+      .filter(hasNoHighOffers(offer_threshold))
+      .map((player): string => player.id);
+
+    const resultIds = new Set(expiredOffers.concat(tooLowOffers));
+
+    console.log(expiredOffers);
+    console.log(tooLowOffers);
+    console.log(resultIds);
+
+    expect(result.length == resultIds.size).toBe(true);
+  });
+
+  test('have 10 offers below treshold or are expired', () => {
+    expect(result.length).toEqual(9);
   });
 });

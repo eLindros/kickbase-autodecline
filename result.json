@@ -1,1 +1,31 @@
-[]
+[
+    {
+        "id": "96",
+        "teamId": "14",
+        "userId": "118426",
+        "userProfile": "https://kickbase.b-cdn.net/user/62730c23b18c47bbb944c1b4a118b157.jpeg",
+        "username": "Ronny Rakete",
+        "firstName": "Kevin",
+        "lastName": "Akpoguma",
+        "profile": "https://kickbase.b-cdn.net/pool/players/96.jpg",
+        "status": 0,
+        "position": 2,
+        "number": 25,
+        "totalPoints": 632,
+        "averagePoints": 49,
+        "marketValue": 4898735,
+        "price": 4898735,
+        "date": "2023-01-06T23:02:02Z",
+        "expiry": 2530869,
+        "offers": [
+            {
+                "id": "1268834343",
+                "price": 4744300,
+                "date": "2023-01-07T00:09:11Z",
+                "validUntilDate": "2023-01-10T00:09:11Z"
+            }
+        ],
+        "lus": 0,
+        "marketValueTrend": 1
+    }
+]

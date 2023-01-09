@@ -1,5 +1,26 @@
 import { Market } from '../src/api/interfaces';
 
+export const getMarketStub = (dates: string[], stub: Market): Market => {
+  const myPlayerPositions: number[] = [
+    1, 6, 9, 19, 33, 38, 42, 51, 56, 63, 67, 84, 86, 88, 108, 119, 122,
+  ];
+
+  let newMarketStub: Market = { ...stub };
+
+  let i = 0;
+
+  myPlayerPositions.forEach((position: number): void => {
+    const date = dates[i];
+    const player = newMarketStub.players[position];
+    if (player.offers) {
+      player.offers[0].validUntilDate = date;
+    }
+    i++;
+  });
+
+  return newMarketStub;
+};
+
 export const marketStub: Market = {
   c: false,
   players: [
@@ -197,7 +218,7 @@ export const marketStub: Market = {
       offers: [
         {
           id: '1268834343',
-          price: 4944300,
+          price: 4744300,
           date: '2023-01-07T00:09:11Z',
           validUntilDate: '2023-01-10T00:09:11Z',
         },

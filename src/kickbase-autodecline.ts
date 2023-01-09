@@ -89,14 +89,16 @@ const getUsersPlayersWithTooLowOrExpiredOffers = (
     if (userPlayers.length) {
       const userPlayersWithOffers = userPlayers.filter(hasOffer);
       if (userPlayersWithOffers.length) {
-        const userPlayersWithTooLowOffers = userPlayersWithOffers.filter(
-          hasNoHighOffers(offer_threshold)
-        );
-        const userPlayersWithExpiredOffers =
-          userPlayersWithOffers.filter(hasOnlyExpiredOffers);
+        // const userPlayersWithTooLowOffers = userPlayersWithOffers.filter(
+        //   hasNoHighOffers(offer_threshold)
+        // );
+        // const userPlayersWithExpiredOffers =
+        //   userPlayersWithOffers.filter(hasOnlyExpiredOffers);
 
         const userPlayersWithTooLowOrExpiredOffers =
-          userPlayersWithTooLowOffers.concat(userPlayersWithExpiredOffers);
+          userPlayersWithOffers.filter(
+            hasNoHighOffers(offer_threshold) || hasOnlyExpiredOffers
+          );
         return userPlayersWithTooLowOrExpiredOffers;
       }
     }
