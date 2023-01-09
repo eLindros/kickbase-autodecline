@@ -97,6 +97,7 @@ const getUsersPlayersWithTooLowOrExpiredOffers = (
 
         const userPlayersWithTooLowOrExpiredOffers =
           userPlayersWithOffers.filter(
+            //TODO: Build a function which does both to prevent double entries (players with too low and expired offers)
             hasNoHighOffers(offer_threshold) || hasOnlyExpiredOffers
           );
         return userPlayersWithTooLowOrExpiredOffers;
