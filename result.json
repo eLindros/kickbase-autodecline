@@ -1,0 +1,262 @@
+[
+    {
+        "id": "43",
+        "teamId": "10",
+        "userId": "118426",
+        "userProfile": "https://kickbase.b-cdn.net/user/62730c23b18c47bbb944c1b4a118b157.jpeg",
+        "username": "Ronny Rakete",
+        "firstName": "Mitchell",
+        "lastName": "Weiser",
+        "profile": "https://kickbase.b-cdn.net/pool/players/43.jpg",
+        "status": 0,
+        "position": 2,
+        "number": 8,
+        "totalPoints": 1506,
+        "averagePoints": 100,
+        "marketValue": 18222181,
+        "price": 18222181,
+        "date": "2023-01-07T03:02:05Z",
+        "expiry": 2545272,
+        "offers": [
+            {
+                "id": "1268974098",
+                "price": 18373300,
+                "date": "2023-01-07T03:42:03Z",
+                "validUntilDate": "2023-01-11T09:01:57.705Z"
+            }
+        ],
+        "lus": 1,
+        "marketValueTrend": 1
+    },
+    {
+        "id": "96",
+        "teamId": "14",
+        "userId": "118426",
+        "userProfile": "https://kickbase.b-cdn.net/user/62730c23b18c47bbb944c1b4a118b157.jpeg",
+        "username": "Ronny Rakete",
+        "firstName": "Kevin",
+        "lastName": "Akpoguma",
+        "profile": "https://kickbase.b-cdn.net/pool/players/96.jpg",
+        "status": 0,
+        "position": 2,
+        "number": 25,
+        "totalPoints": 632,
+        "averagePoints": 49,
+        "marketValue": 4898735,
+        "price": 4898735,
+        "date": "2023-01-06T23:02:02Z",
+        "expiry": 2530869,
+        "offers": [
+            {
+                "id": "1268834343",
+                "price": 4744300,
+                "date": "2023-01-07T00:09:11Z",
+                "validUntilDate": "2023-01-11T10:01:57.705Z"
+            }
+        ],
+        "lus": 0,
+        "marketValueTrend": 1
+    },
+    {
+        "id": "304",
+        "teamId": "3",
+        "userId": "118426",
+        "userProfile": "https://kickbase.b-cdn.net/user/62730c23b18c47bbb944c1b4a118b157.jpeg",
+        "username": "Ronny Rakete",
+        "firstName": "Mats",
+        "lastName": "Hummels",
+        "profile": "https://kickbase.b-cdn.net/pool/players/304.jpg",
+        "status": 0,
+        "position": 2,
+        "number": 15,
+        "totalPoints": 1319,
+        "averagePoints": 101,
+        "marketValue": 22108645,
+        "price": 22108645,
+        "date": "2023-01-07T01:02:02Z",
+        "expiry": 2538069,
+        "offers": [
+            {
+                "id": "1268915358",
+                "price": 22246500,
+                "date": "2023-01-07T01:18:49Z",
+                "validUntilDate": "2023-01-11T11:01:57.705Z"
+            }
+        ],
+        "lus": 1,
+        "marketValueTrend": 1
+    },
+    {
+        "id": "1192",
+        "teamId": "3",
+        "userId": "118426",
+        "userProfile": "https://kickbase.b-cdn.net/user/62730c23b18c47bbb944c1b4a118b157.jpeg",
+        "username": "Ronny Rakete",
+        "firstName": "Julian",
+        "lastName": "Brandt",
+        "profile": "https://kickbase.b-cdn.net/pool/players/1192.jpg",
+        "status": 0,
+        "position": 3,
+        "number": 19,
+        "totalPoints": 1648,
+        "averagePoints": 110,
+        "marketValue": 25098537,
+        "price": 25067585,
+        "date": "2023-01-06T02:02:02Z",
+        "expiry": 2455269,
+        "offers": [
+            {
+                "id": "1267666094",
+                "price": 25262200,
+                "date": "2023-01-06T02:57:07Z",
+                "validUntilDate": "2023-01-11T12:01:57.705Z"
+            }
+        ],
+        "lus": 1,
+        "marketValueTrend": 1
+    },
+    {
+        "id": "1766",
+        "teamId": "7",
+        "userId": "118426",
+        "userProfile": "https://kickbase.b-cdn.net/user/62730c23b18c47bbb944c1b4a118b157.jpeg",
+        "username": "Ronny Rakete",
+        "firstName": "Charles",
+        "lastName": "Aránguiz",
+        "profile": "https://kickbase.b-cdn.net/pool/players/1766.jpg",
+        "status": 1,
+        "position": 3,
+        "number": 20,
+        "totalPoints": 361,
+        "averagePoints": 36,
+        "marketValue": 4477826,
+        "price": 4477826,
+        "date": "2023-01-07T11:02:02Z",
+        "expiry": 2574069,
+        "offers": [
+            {
+                "id": "1269292921",
+                "price": 4517000,
+                "date": "2023-01-07T11:45:13Z",
+                "validUntilDate": "2023-01-11T13:01:57.705Z"
+            }
+        ],
+        "lus": 0,
+        "marketValueTrend": 1
+    },
+    {
+        "id": "1856",
+        "teamId": "2",
+        "userId": "118426",
+        "userProfile": "https://kickbase.b-cdn.net/user/62730c23b18c47bbb944c1b4a118b157.jpeg",
+        "username": "Ronny Rakete",
+        "firstName": "Marcel",
+        "lastName": "Sabitzer",
+        "profile": "https://kickbase.b-cdn.net/pool/players/1856.jpg",
+        "status": 2,
+        "position": 3,
+        "number": 18,
+        "totalPoints": 1119,
+        "averagePoints": 80,
+        "marketValue": 9157899,
+        "price": 9372206,
+        "date": "2023-01-05T21:27:56Z",
+        "expiry": 2438823,
+        "offers": [
+            {
+                "id": "1267272657",
+                "price": 9450200,
+                "date": "2023-01-05T22:06:46Z",
+                "validUntilDate": "2023-01-11T14:01:57.705Z"
+            }
+        ],
+        "lus": 1,
+        "marketValueTrend": 2
+    },
+    {
+        "id": "1936",
+        "teamId": "13",
+        "userId": "118426",
+        "userProfile": "https://kickbase.b-cdn.net/user/62730c23b18c47bbb944c1b4a118b157.jpeg",
+        "username": "Ronny Rakete",
+        "firstName": "Rafal",
+        "lastName": "Gikiewicz",
+        "profile": "https://kickbase.b-cdn.net/pool/players/1936.jpg",
+        "status": 0,
+        "position": 1,
+        "number": 1,
+        "totalPoints": 1485,
+        "averagePoints": 135,
+        "marketValue": 14982153,
+        "price": 14969919,
+        "date": "2023-01-06T01:02:02Z",
+        "expiry": 2451669,
+        "offers": [
+            {
+                "id": "1267640348",
+                "price": 15099600,
+                "date": "2023-01-06T01:41:18Z",
+                "validUntilDate": "2023-01-11T15:01:57.705Z"
+            }
+        ],
+        "lus": 1,
+        "marketValueTrend": 1
+    },
+    {
+        "id": "2878",
+        "teamId": "11",
+        "userId": "118426",
+        "userProfile": "https://kickbase.b-cdn.net/user/62730c23b18c47bbb944c1b4a118b157.jpeg",
+        "username": "Ronny Rakete",
+        "firstName": "Maxence",
+        "lastName": "Lacroix",
+        "status": 0,
+        "position": 2,
+        "number": 4,
+        "totalPoints": 738,
+        "averagePoints": 74,
+        "marketValue": 10260587,
+        "price": 10295453,
+        "date": "2023-01-06T02:02:02Z",
+        "expiry": 2455269,
+        "offers": [
+            {
+                "id": "1267666131",
+                "price": 10362500,
+                "date": "2023-01-06T02:57:07Z",
+                "validUntilDate": "2023-01-11T14:01:57.705Z"
+            }
+        ],
+        "lus": 0,
+        "marketValueTrend": 1
+    },
+    {
+        "id": "4429",
+        "teamId": "14",
+        "userId": "118426",
+        "userProfile": "https://kickbase.b-cdn.net/user/62730c23b18c47bbb944c1b4a118b157.jpeg",
+        "username": "Ronny Rakete",
+        "firstName": "Kasper",
+        "lastName": "Dolberg",
+        "knownName": "Dolberg",
+        "status": 0,
+        "position": 4,
+        "number": 5,
+        "totalPoints": 0,
+        "averagePoints": 0,
+        "marketValue": 8152604,
+        "price": 8152604,
+        "date": "2023-01-07T04:02:05Z",
+        "expiry": 2548872,
+        "offers": [
+            {
+                "id": "1268986191",
+                "price": 8220700,
+                "date": "2023-01-07T04:47:12Z",
+                "validUntilDate": "2023-01-11T14:01:57.705Z"
+            }
+        ],
+        "lus": 1,
+        "marketValueTrend": 1
+    }
+]

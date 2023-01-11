@@ -4,18 +4,23 @@
   "description": "Automatic decline of too low offers in the Kickbase game",
   "main": "index.js",
   "scripts": {
-    "start:build": "npx tsc -w",
-    "start:run": "nodemon build/index.js",
+    "start:build": "npx tsc -w -p tsconfig.json",
+    "start:run": "nodemon build/src/index.js",
     "dev": "concurrently npm:start:*",
-    "build": "tsc",
-    "start": "node build/index.js"
+    "build": "tsc -p tsconfig-build.json",
+    "start:test": "jest --watch",
+    "test": "jest",
+    "start": "node dist/index.js"
   },
   "author": "Ronny Klein",
   "license": "ISC",
   "devDependencies": {
+    "@types/jest": "^29.2.4",
     "concurrently": "^7.4.0",
     "dotenv": "^16.0.3",
-    "nodemon": "^2.0.20"
+    "jest": "^29.3.1",
+    "nodemon": "^2.0.20",
+    "ts-jest": "^29.0.3"
   },
   "dependencies": {
     "@types/cors": "^2.8.12",
