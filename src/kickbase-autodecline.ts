@@ -77,6 +77,18 @@ const hasOnlyExpiredOffers = (player: MarketPlayer): boolean => {
   return false;
 };
 
+const hasTooLowOfferOrOnlyExpiredOffers =
+  (offer_threshold: number): ((player: MarketPlayer) => boolean) =>
+  (player: MarketPlayer): boolean => {
+    if (
+      hasNoHighOffers(offer_threshold)(player) ||
+      hasOnlyExpiredOffers(player)
+    ) {
+      return true;
+    }
+    return false;
+  };
+
 // get player with too too low offers
 const getUsersPlayersWithTooLowOrExpiredOffers = (
   market: Market,
@@ -89,16 +101,9 @@ const getUsersPlayersWithTooLowOrExpiredOffers = (
     if (userPlayers.length) {
       const userPlayersWithOffers = userPlayers.filter(hasOffer);
       if (userPlayersWithOffers.length) {
-        // const userPlayersWithTooLowOffers = userPlayersWithOffers.filter(
-        //   hasNoHighOffers(offer_threshold)
-        // );
-        // const userPlayersWithExpiredOffers =
-        //   userPlayersWithOffers.filter(hasOnlyExpiredOffers);
-
         const userPlayersWithTooLowOrExpiredOffers =
           userPlayersWithOffers.filter(
-            //TODO: Build a function which does both to prevent double entries (players with too low and expired offers)
-            hasNoHighOffers(offer_threshold) || hasOnlyExpiredOffers
+            hasTooLowOfferOrOnlyExpiredOffers(offer_threshold)
           );
         return userPlayersWithTooLowOrExpiredOffers;
       }
@@ -226,5 +231,6 @@ export const exportedForTesting = {
   hasNoHighOffers,
   isNotExpiredOffer,
   hasOnlyExpiredOffers,
+  hasTooLowOfferOrOnlyExpiredOffers,
   getUsersPlayersWithTooLowOrExpiredOffers,
 };

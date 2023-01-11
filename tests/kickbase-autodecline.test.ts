@@ -10,6 +10,7 @@ const {
   hasNoHighOffers,
   isNotExpiredOffer,
   hasOnlyExpiredOffers,
+  hasTooLowOfferOrOnlyExpiredOffers,
   getUsersPlayersWithTooLowOrExpiredOffers,
 } = exportedForTesting;
 
@@ -60,7 +61,7 @@ const modifyNowHour = (hour: number): string => {
 
 describe('Filter: hasOffer', () => {
   test('has no offer', () => {
-    expect(hasOffer(playerStubWithoutOffer)).toBe(false);
+    expect(hasOffer(playerStubWithoutOffer)).toBeFalsy();
   });
 
   test('has offer(s)', () => {
@@ -69,7 +70,7 @@ describe('Filter: hasOffer', () => {
         ...playerStubWithoutOffer,
         offers: [offerStubWithoutValidationDate, getOfferStub(Date())],
       })
-    ).toBe(true);
+    ).toBeTruthy();
   });
 });
 
@@ -88,7 +89,7 @@ describe('Filter: isHighOffer', () => {
       isHighOffer(offer_threshold)(playerStubWithoutOffer)(
         getOfferWithPriceOverTreshold(0.1)
       )
-    ).toBe(true);
+    ).toBeTruthy();
   });
 
   test('offer is too low', () => {
@@ -96,7 +97,7 @@ describe('Filter: isHighOffer', () => {
       isHighOffer(offer_threshold)(playerStubWithoutOffer)(
         getOfferWithPriceOverTreshold(-0.1)
       )
-    ).toBe(false);
+    ).toBeFalsy();
   });
 });
 
@@ -110,7 +111,7 @@ describe('Filter: hasNoHighOffers', () => {
           getOfferWithPriceOverTreshold(-0.1),
         ],
       })
-    ).toBe(false);
+    ).toBeFalsy();
   });
 
   test('all offers are too low', () => {
@@ -122,11 +123,11 @@ describe('Filter: hasNoHighOffers', () => {
           getOfferWithPriceOverTreshold(-0.1),
         ],
       })
-    ).toBe(true);
+    ).toBeTruthy();
   });
 
   test('Market Stub 2 has a high offer', () => {
-    expect(hasNoHighOffers(offer_threshold)(marketStub.players[1])).toBe(false);
+    expect(hasNoHighOffers(offer_threshold)(marketStub.players[1])).toBeFalsy();
   });
 });
 
@@ -138,22 +139,22 @@ describe('Filter: isNotExpiredOffer', () => {
 
   test('1 hour from now is not expired', () => {
     const offer = getOfferStub(modifyNowHour(1));
-    expect(isNotExpiredOffer(offer)).toBe(true);
+    expect(isNotExpiredOffer(offer)).toBeTruthy();
   });
   test('now is already expired', () => {
     const offer = getOfferStub(Date());
-    expect(isNotExpiredOffer(offer)).toBe(false);
+    expect(isNotExpiredOffer(offer)).toBeFalsy();
   });
   test('now -1 hour is expired', () => {
     const offer = getOfferStub(modifyNowHour(-1));
-    expect(isNotExpiredOffer(offer)).toBe(false);
+    expect(isNotExpiredOffer(offer)).toBeFalsy();
   });
 });
 
 describe('Filter: hasOnlyExpiredOffers', () => {
   test('has no offer and therefore no expired offer', () => {
     const player: MarketPlayer = { ...playerStubWithoutOffer };
-    expect(hasOnlyExpiredOffers(player)).toBe(false);
+    expect(hasOnlyExpiredOffers(player)).toBeFalsy();
   });
 
   test('has only one expired offer', () => {
@@ -161,7 +162,7 @@ describe('Filter: hasOnlyExpiredOffers', () => {
       ...playerStubWithoutOffer,
       offers: [getOfferStub(modifyNowHour(-1))],
     };
-    expect(hasOnlyExpiredOffers(player)).toBe(true);
+    expect(hasOnlyExpiredOffers(player)).toBeTruthy();
   });
 
   test('has only a non expired offer', () => {
@@ -169,7 +170,7 @@ describe('Filter: hasOnlyExpiredOffers', () => {
       ...playerStubWithoutOffer,
       offers: [getOfferStub(modifyNowHour(1))],
     };
-    expect(hasOnlyExpiredOffers(player)).toBe(false);
+    expect(hasOnlyExpiredOffers(player)).toBeFalsy();
   });
 
   test('has a non expired and an expired offer => false', () => {
@@ -177,13 +178,13 @@ describe('Filter: hasOnlyExpiredOffers', () => {
       ...playerStubWithoutOffer,
       offers: [getOfferStub(modifyNowHour(1)), getOfferStub(modifyNowHour(-1))],
     };
-    expect(hasOnlyExpiredOffers(player)).toBe(false);
+    expect(hasOnlyExpiredOffers(player)).toBeFalsy();
   });
 
   test('marketStub No. 2 is not expired', () => {
     let market = { ...marketStub };
     market.players[1].offers![0].validUntilDate = modifyNowHour(+1);
-    expect(hasOnlyExpiredOffers(marketStub.players[1])).toBe(false);
+    expect(hasOnlyExpiredOffers(marketStub.players[1])).toBeFalsy();
   });
 });
 
@@ -197,12 +198,12 @@ const writeResult = (stub: Market): void => {
 };
 
 const getMyPlayerPositions = (stub: Market): void => {
-  let myPlayerPositions: number[] = [];
+  let myPlayerPositions: string[] = [];
   let myPlayerLastnames: string[] = [];
   let i = 0;
   stub.players.forEach((player: MarketPlayer): void => {
     if (player.userId == userId) {
-      myPlayerPositions.push(i);
+      myPlayerPositions.push(player.id);
       myPlayerLastnames.push(player.lastName);
     }
     i++;
@@ -233,6 +234,26 @@ const myPlayerNames = [
   'Dolberg',
 ];
 
+const myPlayerIds = [
+  '43',
+  '96',
+  '304',
+  '1192',
+  '1766',
+  '1856',
+  '1936',
+  '2115',
+  '2308',
+  '2522',
+  '2661',
+  '2824',
+  '2838',
+  '2878',
+  '3471',
+  '4336',
+  '4429',
+];
+
 const validUntilDates = [
   modifyNowHour(-7),
   modifyNowHour(-6),
@@ -253,14 +274,15 @@ const validUntilDates = [
   modifyNowHour(-2),
 ];
 
-//writeResult(getMarketStub(validUntilDates, marketStub));
+// writeResult(getMarketStub(validUntilDates, marketStub));
+
+const result = getUsersPlayersWithTooLowOrExpiredOffers(
+  getMarketStub(validUntilDates, marketStub),
+  userId,
+  offer_threshold
+);
 
 describe('Test getUsersPlayersWithTooLowOrExpiredOffers function', () => {
-  const result = getUsersPlayersWithTooLowOrExpiredOffers(
-    getMarketStub(validUntilDates, marketStub),
-    userId,
-    offer_threshold
-  );
   test('empty market', () => {
     expect(
       getUsersPlayersWithTooLowOrExpiredOffers(
@@ -277,31 +299,37 @@ describe('Test getUsersPlayersWithTooLowOrExpiredOffers function', () => {
         result.filter(
           (player: MarketPlayer): Boolean => player.userId == userId
         ).length
-    ).toBe(true);
+    ).toBeTruthy();
   });
 
   test('have all offers', () => {
-    expect(result.length == result.filter(hasOffer).length).toBe(true);
+    expect(result.length == result.filter(hasOffer).length).toBeTruthy();
   });
 
   test(`have all offers below treshold ${offer_threshold} % or are expired`, () => {
-    const expiredOffers = result
+    const result = getUsersPlayersWithTooLowOrExpiredOffers(
+      getMarketStub(validUntilDates, marketStub),
+      userId,
+      offer_threshold
+    );
+    const local_result = [...result];
+    const expiredOffers = local_result
       .filter(hasOnlyExpiredOffers)
       .map((player): string => player.id);
-    const tooLowOffers = result
+    const tooLowOffers = local_result
       .filter(hasNoHighOffers(offer_threshold))
       .map((player): string => player.id);
 
+    const both = local_result
+      .filter(hasTooLowOfferOrOnlyExpiredOffers(offer_threshold))
+      .map((player) => player.id);
+
     const resultIds = new Set(expiredOffers.concat(tooLowOffers));
 
-    console.log(expiredOffers);
-    console.log(tooLowOffers);
-    console.log(resultIds);
-
-    expect(result.length == resultIds.size).toBe(true);
+    expect(result.length == resultIds.size).toBeTruthy();
   });
 
-  test('have 10 offers below treshold or are expired', () => {
+  test('have offers below treshold or are expired', () => {
     expect(result.length).toEqual(9);
   });
 });
