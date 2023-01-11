@@ -1,4 +1,4 @@
-import { Market } from '../src/api/interfaces';
+import { Market } from '../api/interfaces';
 
 export const getMarketStub = (dates: string[], stub: Market): Market => {
   const myPlayerPositions: number[] = [

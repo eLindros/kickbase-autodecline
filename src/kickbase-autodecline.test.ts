@@ -1,8 +1,8 @@
 import fs from 'fs';
-import { Market, MarketPlayer, Offer } from '../src/api/interfaces';
-import { exportedForTesting } from '../src/kickbase-autodecline';
-import { OFFER_THRESHOLD } from '../src/settings';
-import { getMarketStub, marketStub } from './marketStub';
+import { Market, MarketPlayer, Offer } from './api/interfaces';
+import { exportedForTesting } from './kickbase-autodecline';
+import { OFFER_THRESHOLD } from './settings';
+import { getMarketStub, marketStub } from './mocks/marketStub';
 
 const {
   hasOffer,
