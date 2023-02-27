@@ -1,6 +1,6 @@
-import { AxiosError } from "axios";
-import { Market, MarketPlayer, Offer } from "./api/interfaces";
-import { Player } from "./api/interfaces/Players";
+import { AxiosError } from 'axios';
+import { Market, MarketPlayer, Offer } from './api/interfaces';
+import { Player } from './api/interfaces/Players';
 import {
   init,
   login,
@@ -11,8 +11,8 @@ import {
   removePlayerFromMarket,
   getPlayers,
   putPlayerOnMarket,
-} from "./api/KickbaseApi";
-import { KICKBASE_PASSWORD, KICKBASE_USER, OFFER_THRESHOLD } from "./settings";
+} from './api/KickbaseApi';
+import { KICKBASE_PASSWORD, KICKBASE_USER, OFFER_THRESHOLD } from './settings';
 
 type PlayerType = MarketPlayer | Player;
 
@@ -145,7 +145,7 @@ export const collectBonus = async (leagueId: string) => {
   const [error, data] = await postBonusCollect(leagueId);
   if (data) {
     const { err, errMsg } = data;
-    if (err === 0) console.log("Bonus successfully collected");
+    if (err === 0) console.log('Bonus successfully collected');
     if (errMsg) console.error(errMsg);
   }
   if (error) {
@@ -184,7 +184,7 @@ export const declineLowOffers = async (leagueId: string, userId: string) => {
           console.log(`${i}. ${player.firstName} ${player.lastName}`);
         }
         i++;
-        sleep(500);
+        sleep(1000);
       });
     } else {
       console.log(`No players with too low offers left.`);
@@ -201,7 +201,7 @@ export const putAllPlayersOnMarket = async (
   if (errorPlayers) console.error(errorPlayers);
   if (players && players.players) {
     const playersNotOnMarket = players.players.filter(
-      (player: Player): Boolean => ("price" in player ? false : true)
+      (player: Player): Boolean => ('price' in player ? false : true)
     );
     if (playersNotOnMarket.length) {
       let i = 1;
@@ -221,7 +221,7 @@ export const putAllPlayersOnMarket = async (
           console.log(`${i}. ${player.firstName} ${player.lastName}`);
         }
         i++;
-        sleep(500);
+        sleep(1000);
       });
     } else {
       console.log(`All players are already on market.`);

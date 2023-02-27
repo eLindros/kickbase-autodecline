@@ -35,4 +35,4 @@ export const SCHEDULE_DECLINE_HOUR = [new schedule.Range(0, 20), 23];
 // Which minute of the hours shall all players bet put on market again?
 // Usually there is no reason to not want to put all players on the market
 // The minute should be after the decline schedule
-export const SCHEDULE_ON_MARKET_MINUTE = SCHEDULE_DECLINE_MINUTE + 2;
+export const SCHEDULE_ON_MARKET_MINUTE = SCHEDULE_DECLINE_MINUTE + 4;
