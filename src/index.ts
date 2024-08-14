@@ -26,10 +26,10 @@ app.get('/', async (_req: Request, res: Response) => {
 scheduleBonusCollection;
 
 // call schedule for autodecline all too low offers
-scheduleAutoDecline;
+//scheduleAutoDecline;
 
 // call schedule for putting all players on market
-schedulePutOnMarket;
+//schedulePutOnMarket;
 
 // start server
 app.set('port', PORT);
