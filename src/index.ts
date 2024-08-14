@@ -3,8 +3,8 @@ import cors from 'cors';
 import morgan from 'morgan';
 import {
   scheduleBonusCollection,
-  scheduleAutoDecline,
-  schedulePutOnMarket,
+  // scheduleAutoDecline,
+  // schedulePutOnMarket,
 } from './schedules';
 import { PORT } from './settings';
 
