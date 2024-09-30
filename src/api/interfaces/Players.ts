@@ -32,6 +32,7 @@ export enum PlayerStatus {
   'recover training' = 4,
   'red card' = 8,
   'second yellow card' = 16,
+  'red and yellow card' = 32,
   'not in team' = 64,
   'left the league' = 128,
   'away' = 256,
