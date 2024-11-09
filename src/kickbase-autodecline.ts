@@ -7,7 +7,7 @@ import {
   getLeagueId,
   getMarket,
   getUserId,
-  postBonusCollect,
+  getBonusCollect,
   removePlayerFromMarket,
   getPlayers,
   putPlayerOnMarket,
@@ -142,11 +142,9 @@ export const setup = async (): Promise<
 
 // collects the daily bonus
 export const collectBonus = async (leagueId: string) => {
-  const [error, data] = await postBonusCollect(leagueId);
+  const [error, data] = await getBonusCollect();
   if (data) {
-    const { err, errMsg } = data;
-    if (err === 0) console.log('Bonus successfully collected');
-    if (errMsg) console.error(errMsg);
+    console.log('Bonus successfully collected');
   }
   if (error) {
     const err = error as AxiosError;

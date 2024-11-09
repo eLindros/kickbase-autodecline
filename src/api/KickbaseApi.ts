@@ -16,6 +16,7 @@ enum kickbaseApiUrls {
   login = '/user/login',
   league = '/leagues',
   market = '/market',
+  bonus = '/v4/bonus/collect',
 }
 
 type AxiosCallResponse<T> = [unknown | null, T | null];
@@ -87,13 +88,13 @@ export const getUserId = (login: Login): AxiosCallResponse<string> => {
   return ['Error: Keine UserId gefunden.', null];
 };
 
-export const postBonusCollect = async (
-  leagueId: string
-): Promise<AxiosCallResponse<BonusCollect>> => {
-  const url: string = `/leagues/${leagueId}/collectgift`;
+export const getBonusCollect = async (): Promise<
+  AxiosCallResponse<BonusCollect>
+> => {
+  const url: string = kickbaseApiUrls.bonus;
   return axiosCall<BonusCollect>({
     url: url,
-    method: 'POST',
+    method: 'GET',
   });
 };
 
