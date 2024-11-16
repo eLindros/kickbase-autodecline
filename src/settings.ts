@@ -16,4 +16,4 @@ export const DATE_LOCALE = 'de-DE';
 
 // Which minute of which hour shall the bonus get be collected?
 export const SCHEDULE_GET_BONUS_MINUTE = 30;
-export const SCHEDULE_GET_BONUS_HOUR = 6;
+export const SCHEDULE_GET_BONUS_HOUR = 5;
