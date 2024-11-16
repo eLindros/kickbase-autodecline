@@ -1,40 +1,13 @@
 import axios, { Axios, AxiosInstance, AxiosRequestConfig } from 'axios';
-import {
-  BonusCollect,
-  Login,
-  League,
-  Leagues,
-  Market,
-  MarketPlayer,
-  Players,
-  Player,
-  User,
-} from './interfaces';
+import { BonusCollect, Login, League, Leagues, User } from './interfaces';
 
 enum kickbaseApiUrls {
-  base = 'https://api.kickbase.com',
+  base = 'https://api.kickbase.com/v4',
   login = '/user/login',
-  league = '/leagues',
-  market = '/market',
-  bonus = '/v4/bonus/collect',
+  bonus = '/bonus/collect',
 }
 
 type AxiosCallResponse<T> = [unknown | null, T | null];
-
-interface KickbaseApiResponses {
-  leagues?: Leagues;
-  market?: Market;
-}
-
-interface KickbaseData {
-  leagues?: League[];
-  market?: MarketPlayer[];
-}
-
-interface KickbaseError {
-  err: number;
-  errMsg?: string;
-}
 
 export const init = (): void => {
   axios.defaults.baseURL = kickbaseApiUrls.base;
@@ -95,53 +68,5 @@ export const getBonusCollect = async (): Promise<
   return axiosCall<BonusCollect>({
     url: url,
     method: 'GET',
-  });
-};
-
-export const getMarket = async (
-  leagueId: string
-): Promise<AxiosCallResponse<Market>> => {
-  const marketUrl: string = `/leagues/${leagueId}${kickbaseApiUrls.market}`;
-  return axiosCall<Market>({
-    url: marketUrl,
-    method: 'GET',
-  });
-};
-
-export const getPlayers = async (
-  leagueId: string,
-  userId: string
-): Promise<AxiosCallResponse<Players>> => {
-  const playersURL: string = `/leagues/${leagueId}/users/${userId}/players`;
-  return axiosCall<Players>({
-    url: playersURL,
-    method: 'GET',
-  });
-};
-
-export const putPlayerOnMarket = async (
-  leagueId: string,
-  playerId: string,
-  price: number
-): Promise<AxiosCallResponse<KickbaseError>> => {
-  const marketUrl: string = `/leagues/${leagueId}${kickbaseApiUrls.market}`;
-  return axiosCall<KickbaseError>({
-    url: marketUrl,
-    method: 'POST',
-    data: {
-      playerId,
-      price,
-    },
-  });
-};
-
-export const removePlayerFromMarket = async (
-  leagueId: string,
-  playerId: string
-): Promise<AxiosCallResponse<KickbaseError>> => {
-  const marketUrl: string = `/leagues/${leagueId}${kickbaseApiUrls.market}/${playerId}`;
-  return axiosCall<KickbaseError>({
-    url: marketUrl,
-    method: 'DELETE',
   });
 };

@@ -1,11 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import {
-  scheduleBonusCollection,
-  // scheduleAutoDecline,
-  // schedulePutOnMarket,
-} from './schedules';
+import { scheduleBonusCollection } from './schedules';
 import { PORT } from './settings';
 
 // initialize express server
@@ -24,12 +20,6 @@ app.get('/', async (_req: Request, res: Response) => {
 
 // call schedule for bonus collection
 scheduleBonusCollection;
-
-// call schedule for autodecline all too low offers
-//scheduleAutoDecline;
-
-// call schedule for putting all players on market
-//schedulePutOnMarket;
 
 // start server
 app.set('port', PORT);
