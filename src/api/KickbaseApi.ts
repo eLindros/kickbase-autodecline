@@ -32,8 +32,8 @@ export const login = async (
     url: kickbaseApiUrls.login,
     method: 'POST',
     data: {
-      email: userName,
-      password: password,
+      em: userName,
+      pass: password,
       ext: true,
     },
   });
