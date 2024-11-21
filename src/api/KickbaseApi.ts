@@ -39,7 +39,7 @@ export const login = async (
   });
   const [error, data] = response;
   if (data) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${data.tkn}`;
   }
   return response;
 };
@@ -48,15 +48,15 @@ export const getLeagueId = (
   leagueIndex: number,
   login: Login
 ): AxiosCallResponse<string> => {
-  if (login.leagues && login.leagues.length >= leagueIndex) {
-    return [null, login.leagues[leagueIndex].id];
+  if (login.srvl && login.srvl.length >= leagueIndex) {
+    return [null, login.srvl[leagueIndex].id];
   }
   return ['Error: Keine LeagueId gefunden.', null];
 };
 
 export const getUserId = (login: Login): AxiosCallResponse<string> => {
-  if (login.user && login.user.id) {
-    return [null, login.user.id];
+  if (login.u && login.u.id) {
+    return [null, login.u.id];
   }
   return ['Error: Keine UserId gefunden.', null];
 };

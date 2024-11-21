@@ -1,14 +1,10 @@
 import { League } from './Leagues';
 
 export interface Login {
-  user: User;
-  leagues: League[];
-  svcs: SVCS[];
-  token: string;
-  tokenExp: string;
-  ctoken: string;
-  ctokenExp: string;
-  err: number;
+  u: User;
+  srvl: League[];
+  tkn: string;
+  tknex: string;
 }
 
 export interface User {
